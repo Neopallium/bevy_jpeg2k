@@ -2,23 +2,19 @@ use std::env;
 
 use bevy::prelude::*;
 
-use jpeg2k::loader::*;
+use bevy_jpeg2k::*;
 
 fn main() {
-  dotenv::dotenv().ok();
-  env_logger::init();
-
-  App::build()
+  App::new()
     .add_plugins(DefaultPlugins)
     .add_plugin(Jpeg2KPlugin)
-    .add_startup_system(setup.system())
+    .add_startup_system(setup)
     .run();
 }
 
 fn setup(
   mut commands: Commands,
   asset_server: Res<AssetServer>,
-  mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
   let name = env::args().nth(1)
     .unwrap_or_else(|| "example.j2k".to_string());
@@ -34,7 +30,6 @@ fn setup(
         justify_content: JustifyContent::SpaceBetween,
         ..Default::default()
       },
-      material: materials.add(Color::NONE.into()),
       ..Default::default()
     })
     .with_children(|parent| {
@@ -44,8 +39,7 @@ fn setup(
           size: Size::new(Val::Auto, Val::Percent(100.0)),
           ..Default::default()
         },
-        material: materials
-          .add(texture_handle.into()),
+        image: UiImage(texture_handle.into()),
         ..Default::default()
       });
     });

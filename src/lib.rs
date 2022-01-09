@@ -32,9 +32,10 @@
 
 use bevy::{
     asset::{AssetLoader, LoadContext, LoadedAsset},
-    prelude::*,
+    prelude::{App, AddAsset, Plugin},
     utils::BoxedFuture,
 };
+use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
 use jpeg2k::{Image, error};
 
@@ -61,9 +62,8 @@ impl AssetLoader for Jpeg2KAssetLoader {
   }
 }
 
-/// Try to convert a loaded Jpeg 2000 image into a Bevy `Texture`.
-pub fn image_to_texture(img: Image) -> error::Result<Texture> {
-  use bevy::render::texture::*;
+/// Try to convert a loaded Jpeg 2000 image into a Bevy `bevy::prelude::Image`.
+pub fn image_to_texture(img: Image) -> error::Result<bevy::prelude::Image> {
   let comps = img.components();
   let (width, height) = comps.get(0).map(|c| (c.width(), c.height()))
     .ok_or_else(|| error::Error::UnsupportedComponentsError(0))?;
@@ -99,8 +99,12 @@ pub fn image_to_texture(img: Image) -> error::Result<Texture> {
     }
   };
 
-  Ok(Texture::new(
-    Extent3d::new(width, height, 1),
+  Ok(bevy::prelude::Image::new(
+    Extent3d {
+      width,
+      height,
+      depth_or_array_layers: 1,
+    },
     TextureDimension::D2,
     data, format,
   ))
@@ -111,7 +115,7 @@ pub fn image_to_texture(img: Image) -> error::Result<Texture> {
 pub struct Jpeg2KPlugin;
 
 impl Plugin for Jpeg2KPlugin {
-  fn build(&self, app: &mut AppBuilder) {
+  fn build(&self, app: &mut App) {
     app
       .init_asset_loader::<Jpeg2KAssetLoader>()
       ;

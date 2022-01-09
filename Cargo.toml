@@ -10,8 +10,14 @@ repository = "https://github.com/Neopallium/bevy_jpeg2k"
 homepage = "https://github.com/Neopallium/bevy_jpeg2k"
 
 [dependencies]
+anyhow = "1.0"
+
 jpeg2k = { version = "0.5", default-features = false, features = ["threads"] }
 
-anyhow = "1.0"
-bevy = "0.6"
+bevy_app = { version = "0.6", default-features = false }
+bevy_asset = { version = "0.6", default-features = false }
+bevy_render = { version = "0.6", default-features = false }
 wgpu = "0.12"
+
+[dev-dependencies]
+bevy = "0.6"

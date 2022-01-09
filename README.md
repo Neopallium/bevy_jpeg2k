@@ -2,6 +2,13 @@
 
 JPEG 2000 image loader for [Bevy](https://bevyengine.org/).
 
+# Versions
+
+- Bevy 0.6: `bevy_jpeg2k = "0.6"`
+- Bevy 0.5: `bevy_jpeg2k = "0.5"`
+
+# Example
+
 ```rust
 use bevy::prelude::*;
 

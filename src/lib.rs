@@ -30,11 +30,10 @@
 //!
 //! ```
 
-use bevy::{
-    asset::{AssetLoader, LoadContext, LoadedAsset},
-    prelude::{App, AddAsset, Plugin},
-    utils::BoxedFuture,
+use bevy_asset::{
+  AssetLoader, AddAsset, BoxedFuture, LoadContext, LoadedAsset,
 };
+use bevy_app::{App, Plugin};
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
 use jpeg2k::{Image, error};
@@ -62,8 +61,8 @@ impl AssetLoader for Jpeg2KAssetLoader {
   }
 }
 
-/// Try to convert a loaded Jpeg 2000 image into a Bevy `bevy::prelude::Image`.
-pub fn image_to_texture(img: Image) -> error::Result<bevy::prelude::Image> {
+/// Try to convert a loaded Jpeg 2000 image into a Bevy `Image`.
+pub fn image_to_texture(img: Image) -> error::Result<bevy_render::texture::Image> {
   let comps = img.components();
   let (width, height) = comps.get(0).map(|c| (c.width(), c.height()))
     .ok_or_else(|| error::Error::UnsupportedComponentsError(0))?;
@@ -99,7 +98,7 @@ pub fn image_to_texture(img: Image) -> error::Result<bevy::prelude::Image> {
     }
   };
 
-  Ok(bevy::prelude::Image::new(
+  Ok(bevy_render::texture::Image::new(
     Extent3d {
       width,
       height,

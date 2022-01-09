@@ -19,7 +19,7 @@ fn setup(
   let name = env::args().nth(1)
     .unwrap_or_else(|| "example.j2k".to_string());
 
-  let texture_handle = asset_server.load(name.as_str());
+  let image_handle = asset_server.load(name.as_str());
   // ui camera
   commands.spawn_bundle(UiCameraBundle::default());
   // root node
@@ -39,7 +39,7 @@ fn setup(
           size: Size::new(Val::Auto, Val::Percent(100.0)),
           ..Default::default()
         },
-        image: UiImage(texture_handle.into()),
+        image: UiImage(image_handle),
         ..Default::default()
       });
     });

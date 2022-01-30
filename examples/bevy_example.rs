@@ -12,11 +12,9 @@ fn main() {
     .run();
 }
 
-fn setup(
-  mut commands: Commands,
-  asset_server: Res<AssetServer>,
-) {
-  let name = env::args().nth(1)
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+  let name = env::args()
+    .nth(1)
     .unwrap_or_else(|| "example.j2k".to_string());
 
   let image_handle = asset_server.load(name.as_str());

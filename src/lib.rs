@@ -30,13 +30,11 @@
 //!
 //! ```
 
-use bevy_asset::{
-  AssetLoader, AddAsset, BoxedFuture, LoadContext, LoadedAsset,
-};
 use bevy_app::{App, Plugin};
+use bevy_asset::{AddAsset, AssetLoader, BoxedFuture, LoadContext, LoadedAsset};
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
-use jpeg2k::{Image, ImageData, error};
+use jpeg2k::{error, Image, ImageData};
 
 /// Jpeg 2000 asset loader for Bevy.
 #[derive(Default)]
@@ -65,7 +63,12 @@ impl AssetLoader for Jpeg2KAssetLoader {
 pub fn image_to_texture(img: Image) -> error::Result<bevy_render::texture::Image> {
   let format;
 
-  let ImageData { width, height, data, .. } = match img.num_components() {
+  let ImageData {
+    width,
+    height,
+    data,
+    ..
+  } = match img.num_components() {
     1 => {
       format = TextureFormat::R8Unorm;
       img.get_pixels(None)?
@@ -90,7 +93,8 @@ pub fn image_to_texture(img: Image) -> error::Result<bevy_render::texture::Image
       depth_or_array_layers: 1,
     },
     TextureDimension::D2,
-    data, format,
+    data,
+    format,
   ))
 }
 
@@ -100,8 +104,6 @@ pub struct Jpeg2KPlugin;
 
 impl Plugin for Jpeg2KPlugin {
   fn build(&self, app: &mut App) {
-    app
-      .init_asset_loader::<Jpeg2KAssetLoader>()
-      ;
+    app.init_asset_loader::<Jpeg2KAssetLoader>();
   }
 }

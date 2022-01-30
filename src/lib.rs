@@ -36,7 +36,7 @@ use bevy_asset::{
 use bevy_app::{App, Plugin};
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
-use jpeg2k::{Image, error};
+use jpeg2k::{Image, ImageData, error};
 
 /// Jpeg 2000 asset loader for Bevy.
 #[derive(Default)]
@@ -63,38 +63,23 @@ impl AssetLoader for Jpeg2KAssetLoader {
 
 /// Try to convert a loaded Jpeg 2000 image into a Bevy `Image`.
 pub fn image_to_texture(img: Image) -> error::Result<bevy_render::texture::Image> {
-  let comps = img.components();
-  let (width, height) = comps.get(0).map(|c| (c.width(), c.height()))
-    .ok_or_else(|| error::Error::UnsupportedComponentsError(0))?;
   let format;
 
-  let data = match comps {
-    [r] => {
+  let ImageData { width, height, data, .. } = match img.num_components() {
+    1 => {
       format = TextureFormat::R8Unorm;
-      r.data().iter().map(|r| *r as u8).collect()
+      img.get_pixels(None)?
     }
-    [r, g, b] => {
-      let len = (width * height) as usize;
-      let mut pixels = Vec::with_capacity(len * 4);
-
+    3 => {
       format = TextureFormat::Rgba8UnormSrgb;
-      for (r, (g, b)) in r.data().iter().zip(g.data().iter().zip(b.data().iter())) {
-        pixels.extend_from_slice(&[*r as u8, *g as u8, *b as u8, u8::MAX]);
-      }
-      pixels
+      img.get_pixels(Some(u8::MAX))?
     }
-    [r, g, b, a] => {
-      let len = (width * height) as usize;
-      let mut pixels = Vec::with_capacity(len * 4);
-
+    4 => {
       format = TextureFormat::Rgba8UnormSrgb;
-      for (r, (g, (b, a))) in r.data().iter().zip(g.data().iter().zip(b.data().iter().zip(a.data().iter()))) {
-        pixels.extend_from_slice(&[*r as u8, *g as u8, *b as u8, *a as u8]);
-      }
-      pixels
+      img.get_pixels(None)?
     }
-    _ => {
-      return Err(error::Error::UnsupportedComponentsError(img.num_components()));
+    num => {
+      return Err(error::Error::UnsupportedComponentsError(num));
     }
   };
 

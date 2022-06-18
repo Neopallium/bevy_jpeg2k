@@ -12,8 +12,7 @@ homepage = "https://github.com/Neopallium/bevy_jpeg2k"
 [dependencies]
 anyhow = "1.0"
 
-#jpeg2k = { version = "0.6", default-features = false, features = ["threads"] }
-jpeg2k = { path = "../jpeg2k/", default-features = false, features = ["threads"] }
+jpeg2k = { version = "0.6", path = "../jpeg2k/", default-features = false, features = ["threads"] }
 
 bevy_app = { version = "0.6", default-features = false }
 bevy_asset = { version = "0.6", default-features = false }

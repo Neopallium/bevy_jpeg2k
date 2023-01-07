@@ -19,10 +19,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
   let image_handle = asset_server.load(name.as_str());
   // Camera
-  commands.spawn_bundle(Camera2dBundle::default());
+  commands.spawn(Camera2dBundle::default());
   // root node
   commands
-    .spawn_bundle(NodeBundle {
+    .spawn(NodeBundle {
       style: Style {
         size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
         justify_content: JustifyContent::SpaceBetween,
@@ -32,7 +32,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     })
     .with_children(|parent| {
       // bevy logo (image)
-      parent.spawn_bundle(ImageBundle {
+      parent.spawn(ImageBundle {
         style: Style {
           size: Size::new(Val::Auto, Val::Percent(100.0)),
           ..Default::default()

@@ -37,7 +37,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
           size: Size::new(Val::Auto, Val::Percent(100.0)),
           ..Default::default()
         },
-        image: UiImage(image_handle),
+        image: UiImage::new(image_handle),
         ..Default::default()
       });
     });

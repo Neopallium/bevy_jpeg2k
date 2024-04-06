@@ -10,13 +10,13 @@
 //! use bevy_jpeg2k::*;
 //!
 //! fn main() {
-//!   App::build()
+//!   App::new()
 //!     .add_plugins(DefaultPlugins)
 //!
 //!     // Load the Jpeg 2000 asset loader plugin.
-//!     .add_plugin(Jpeg2KPlugin)
+//!     .add_plugins(Jpeg2KPlugin)
 //!
-//!     .add_startup_system(setup)
+//!     .add_systems(Startup, setup)
 //!     .run();
 //! }
 //!
@@ -24,7 +24,7 @@
 //!   asset_server: Res<AssetServer>,
 //! ) {
 //!   // Load j2k, jp2, j2c, images.
-//!   let image_handle = asset_server.load("example.j2k");
+//!   let image_handle: Handle<Image> = asset_server.load("example.j2k");
 //!   // <Use the image handle>
 //! }
 //!

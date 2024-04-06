@@ -17,7 +17,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     .nth(1)
     .unwrap_or_else(|| "example.j2k".to_string());
 
-  let image_handle = asset_server.load(name.as_str());
+  let image_handle = asset_server.load(name);
   // Camera
   commands.spawn(Camera2dBundle::default());
   // root node

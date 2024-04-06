@@ -32,7 +32,9 @@
 
 use bevy::{
   app::{App, Plugin},
-  asset::{AddAsset, AssetLoader, BoxedFuture, LoadContext, LoadedAsset},
+  asset::{io::Reader, AssetLoader, AsyncReadExt, LoadContext},
+  prelude::*,
+  utils::BoxedFuture,
 };
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
@@ -43,16 +45,22 @@ use jpeg2k::{error, Image, ImageData};
 pub struct Jpeg2KAssetLoader;
 
 impl AssetLoader for Jpeg2KAssetLoader {
+  type Asset = bevy::render::texture::Image;
+  type Settings = ();
+  type Error = anyhow::Error;
+
   fn load<'a>(
     &'a self,
-    bytes: &'a [u8],
-    load_context: &'a mut LoadContext,
-  ) -> BoxedFuture<'a, Result<(), anyhow::Error>> {
+    reader: &'a mut Reader,
+    _settings: &'a Self::Settings,
+    _load_context: &'a mut LoadContext,
+  ) -> BoxedFuture<'a, Result<Self::Asset, Self::Error>> {
     Box::pin(async move {
-      let image = Image::from_bytes(bytes)?;
+      let mut bytes = Vec::new();
+      reader.read_to_end(&mut bytes).await?;
+      let image = Image::from_bytes(&bytes)?;
       let txt = image_to_texture(image)?;
-      load_context.set_default_asset(LoadedAsset::new(txt));
-      Ok(())
+      Ok(txt)
     })
   }
 

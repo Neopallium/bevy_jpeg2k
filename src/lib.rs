@@ -30,8 +30,10 @@
 //!
 //! ```
 
-use bevy_app::{App, Plugin};
-use bevy_asset::{AddAsset, AssetLoader, BoxedFuture, LoadContext, LoadedAsset};
+use bevy::{
+  app::{App, Plugin},
+  asset::{AddAsset, AssetLoader, BoxedFuture, LoadContext, LoadedAsset},
+};
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
 use jpeg2k::{error, Image, ImageData};
@@ -60,7 +62,7 @@ impl AssetLoader for Jpeg2KAssetLoader {
 }
 
 /// Try to convert a loaded Jpeg 2000 image into a Bevy `Image`.
-pub fn image_to_texture(img: Image) -> error::Result<bevy_render::texture::Image> {
+pub fn image_to_texture(img: Image) -> error::Result<bevy::render::texture::Image> {
   let format;
 
   let ImageData {
@@ -86,7 +88,7 @@ pub fn image_to_texture(img: Image) -> error::Result<bevy_render::texture::Image
     }
   };
 
-  Ok(bevy_render::texture::Image::new(
+  Ok(bevy::render::texture::Image::new(
     Extent3d {
       width,
       height,

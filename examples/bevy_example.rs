@@ -7,8 +7,8 @@ use bevy_jpeg2k::*;
 fn main() {
   App::new()
     .add_plugins(DefaultPlugins)
-    .add_plugin(Jpeg2KPlugin)
-    .add_startup_system(setup)
+    .add_plugins(Jpeg2KPlugin)
+    .add_systems(Startup, setup)
     .run();
 }
 
@@ -24,7 +24,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
   commands
     .spawn(NodeBundle {
       style: Style {
-        size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+        width: Val::Percent(100.0),
+        height: Val::Percent(100.0),
         justify_content: JustifyContent::SpaceBetween,
         ..Default::default()
       },
@@ -34,7 +35,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
       // bevy logo (image)
       parent.spawn(ImageBundle {
         style: Style {
-          size: Size::new(Val::Auto, Val::Percent(100.0)),
+          width: Val::Auto,
+          height: Val::Percent(100.0),
           ..Default::default()
         },
         image: UiImage::new(image_handle),

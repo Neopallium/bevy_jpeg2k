@@ -4,6 +4,7 @@ JPEG 2000 image loader for [Bevy](https://bevyengine.org/).
 
 # Versions
 
+- Bevy 0.13: `bevy_jpeg2k = "0.13"`
 - Bevy 0.12: `bevy_jpeg2k = "0.12"`
 - Bevy 0.11: `bevy_jpeg2k = "0.11"`
 - Bevy 0.10: `bevy_jpeg2k = "0.10"`
@@ -21,13 +22,13 @@ use bevy::prelude::*;
 use bevy_jpeg2k::*;
 
 fn main() {
-  App::build()
+  App::new()
     .add_plugins(DefaultPlugins)
 
     // Load the Jpeg 2000 asset loader plugin.
-    .add_plugin(Jpeg2KPlugin)
+    .add_plugins(Jpeg2KPlugin)
 
-    .add_startup_system(setup)
+    .add_systems(Startup, setup)
     .run();
 }
 
@@ -35,7 +36,7 @@ fn setup(
   asset_server: Res<AssetServer>,
 ) {
   // Load j2k, jp2, j2c, images.
-  let image_handle = asset_server.load("example.j2k");
+  let image_handle: Handle<Image> = asset_server.load("example.j2k");
   // <Use the image handle>
 }
 

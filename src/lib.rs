@@ -105,6 +105,7 @@ pub fn image_to_texture(img: Image) -> error::Result<bevy::render::texture::Imag
     TextureDimension::D2,
     data,
     format,
+    bevy::render::render_asset::RenderAssetUsages::all(),
   ))
 }
 

@@ -34,7 +34,6 @@ use bevy::{
   app::{App, Plugin},
   asset::{io::Reader, AssetLoader, AsyncReadExt, LoadContext},
   prelude::*,
-  utils::BoxedFuture,
 };
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
@@ -49,19 +48,17 @@ impl AssetLoader for Jpeg2KAssetLoader {
   type Settings = ();
   type Error = anyhow::Error;
 
-  fn load<'a>(
+  async fn load<'a>(
     &'a self,
-    reader: &'a mut Reader,
+    reader: &'a mut Reader<'_>,
     _settings: &'a Self::Settings,
-    _load_context: &'a mut LoadContext,
-  ) -> BoxedFuture<'a, Result<Self::Asset, Self::Error>> {
-    Box::pin(async move {
-      let mut bytes = Vec::new();
-      reader.read_to_end(&mut bytes).await?;
-      let image = Image::from_bytes(&bytes)?;
-      let txt = image_to_texture(image)?;
-      Ok(txt)
-    })
+    _load_context: &'a mut LoadContext<'_>,
+  ) -> Result<Self::Asset, Self::Error> {
+    let mut bytes = Vec::new();
+    reader.read_to_end(&mut bytes).await?;
+    let image = Image::from_bytes(&bytes)?;
+    let txt = image_to_texture(image)?;
+    Ok(txt)
   }
 
   fn extensions(&self) -> &[&str] {

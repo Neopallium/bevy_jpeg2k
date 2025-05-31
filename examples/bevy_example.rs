@@ -1,6 +1,6 @@
 use std::env;
 
-use bevy::prelude::*;
+use bevy::{prelude::*, ui::widget::NodeImageMode};
 
 use bevy_jpeg2k::*;
 
@@ -19,27 +19,20 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
   let image_handle = asset_server.load(name);
   // Camera
-  commands.spawn(Camera2dBundle::default());
+  commands.spawn(Camera2d::default());
   // root node
   commands
-    .spawn(NodeBundle {
-      style: Style {
-        width: Val::Percent(100.0),
-        height: Val::Percent(100.0),
-        justify_content: JustifyContent::SpaceBetween,
-        ..Default::default()
-      },
+    .spawn(Node {
+      width: Val::Percent(100.0),
+      height: Val::Percent(100.0),
+      justify_content: JustifyContent::SpaceBetween,
       ..Default::default()
     })
     .with_children(|parent| {
       // bevy logo (image)
-      parent.spawn(ImageBundle {
-        style: Style {
-          width: Val::Auto,
-          height: Val::Percent(100.0),
-          ..Default::default()
-        },
-        image: UiImage::new(image_handle),
+      parent.spawn(ImageNode {
+        image: image_handle,
+        image_mode: NodeImageMode::Auto,
         ..Default::default()
       });
     });

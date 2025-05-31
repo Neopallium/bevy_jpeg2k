@@ -32,7 +32,7 @@
 
 use bevy::{
   app::{App, Plugin},
-  asset::{io::Reader, AssetLoader, AsyncReadExt, LoadContext},
+  asset::{io::Reader, AssetLoader, LoadContext},
   prelude::*,
 };
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
@@ -44,15 +44,15 @@ use jpeg2k::{error, Image, ImageData};
 pub struct Jpeg2KAssetLoader;
 
 impl AssetLoader for Jpeg2KAssetLoader {
-  type Asset = bevy::render::texture::Image;
+  type Asset = bevy::image::Image;
   type Settings = ();
   type Error = anyhow::Error;
 
-  async fn load<'a>(
-    &'a self,
-    reader: &'a mut Reader<'_>,
-    _settings: &'a Self::Settings,
-    _load_context: &'a mut LoadContext<'_>,
+  async fn load(
+    &self,
+    reader: &mut dyn Reader,
+    _settings: &Self::Settings,
+    _load_context: &mut LoadContext<'_>,
   ) -> Result<Self::Asset, Self::Error> {
     let mut bytes = Vec::new();
     reader.read_to_end(&mut bytes).await?;
@@ -67,7 +67,7 @@ impl AssetLoader for Jpeg2KAssetLoader {
 }
 
 /// Try to convert a loaded Jpeg 2000 image into a Bevy `Image`.
-pub fn image_to_texture(img: Image) -> error::Result<bevy::render::texture::Image> {
+pub fn image_to_texture(img: Image) -> error::Result<bevy::image::Image> {
   let format;
 
   let ImageData {
@@ -93,7 +93,7 @@ pub fn image_to_texture(img: Image) -> error::Result<bevy::render::texture::Imag
     }
   };
 
-  Ok(bevy::render::texture::Image::new(
+  Ok(bevy::image::Image::new(
     Extent3d {
       width,
       height,

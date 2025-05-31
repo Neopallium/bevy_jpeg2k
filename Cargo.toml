@@ -1,6 +1,6 @@
 [package]
 name = "bevy_jpeg2k"
-version = "0.15.0"
+version = "0.16.0"
 authors = ["Robert G. Jakabosky <rjakabosky+neopallium@neoawareness.com>"]
 edition = "2021"
 license = "MIT/Apache-2.0"
@@ -21,8 +21,8 @@ anyhow = "1.0"
 
 jpeg2k = { version = "0.7", default-features = false }
 
-bevy = { version = "0.15", default-features = false, features = [ "bevy_asset", "bevy_render" ] }
-wgpu = "23.0"
+bevy = { version = "0.16", default-features = false, features = [ "bevy_asset", "bevy_render" ] }
+wgpu = "24.0"
 
 [dev-dependencies]
-bevy = "0.15"
+bevy = "0.16"

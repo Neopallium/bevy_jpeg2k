@@ -37,7 +37,7 @@ use bevy::{
 };
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
-use jpeg2k::{error, Image, ImageData};
+use jpeg2k::{error, Image, ImageData, ImagePixelData};
 
 /// Jpeg 2000 asset loader for Bevy.
 #[derive(Default)]
@@ -68,28 +68,27 @@ impl AssetLoader for Jpeg2KAssetLoader {
 
 /// Try to convert a loaded Jpeg 2000 image into a Bevy `Image`.
 pub fn image_to_texture(img: Image) -> error::Result<bevy::image::Image> {
-  let format;
-
   let ImageData {
     width,
     height,
     data,
     ..
   } = match img.num_components() {
-    1 => {
-      format = TextureFormat::R8Unorm;
-      img.get_pixels(None)?
-    }
-    3 => {
-      format = TextureFormat::Rgba8UnormSrgb;
-      img.get_pixels(Some(u8::MAX))?
-    }
-    4 => {
-      format = TextureFormat::Rgba8UnormSrgb;
-      img.get_pixels(None)?
-    }
+    1 | 4 => img.get_pixels(None)?,
+    3 => img.get_pixels(Some(u32::MAX))?,
     num => {
       return Err(error::Error::UnsupportedComponentsError(num));
+    }
+  };
+
+  let (format, data) = match data {
+    ImagePixelData::L8(data) => (TextureFormat::R8Unorm, data),
+    ImagePixelData::La8(data) => (TextureFormat::Rg8Unorm, data),
+    ImagePixelData::Rgba8(data) => (TextureFormat::Rgba8UnormSrgb, data),
+    _ => {
+      return Err(error::Error::UnknownFormatError(format!(
+        "Unsupported pixel data."
+      )));
     }
   };
 

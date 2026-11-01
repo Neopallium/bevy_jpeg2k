@@ -9,6 +9,12 @@ keywords = ["j2k", "jp2", "jpeg2000", "bevy"]
 repository = "https://github.com/Neopallium/bevy_jpeg2k"
 homepage = "https://github.com/Neopallium/bevy_jpeg2k"
 
+exclude = [
+  "examples/*",
+  "assets/*",
+  "*.sh",
+]
+
 [features]
 default = [ "openjpeg-sys", "threads" ]
 

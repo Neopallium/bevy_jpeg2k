@@ -4,6 +4,7 @@ JPEG 2000 image loader for [Bevy](https://bevyengine.org/).
 
 # Versions
 
+- Bevy 0.20: `bevy_jpeg2k = "0.20"`
 - Bevy 0.19: `bevy_jpeg2k = "0.19"`
 - Bevy 0.18: `bevy_jpeg2k = "0.18"`
 - Bevy 0.17: `bevy_jpeg2k = "0.17"`

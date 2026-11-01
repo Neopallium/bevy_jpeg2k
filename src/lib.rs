@@ -36,7 +36,7 @@ use bevy::{
   prelude::*,
 };
 use bevy_reflect::TypePath;
-use wgpu::{Extent3d, TextureDimension, TextureFormat};
+use wgpu_types::{Extent3d, TextureDimension, TextureFormat};
 
 use jpeg2k::{error, Image, ImageData, ImagePixelData};
 

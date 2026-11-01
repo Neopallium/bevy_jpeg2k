@@ -49,6 +49,19 @@ let quarter = asset_server.load("LOD_2/textures/example.j2k");
 Each distinct `LOD_<n>/...` path produces its own `Handle<Image>`, so a single
 source file can be loaded at several resolutions simultaneously.
 
+To enable LOD-in-path, the `Jpeg2KPathLodPlugin` must be added **before**
+`DefaultPlugins` (it registers a custom asset reader, and asset sources are
+built when `AssetPlugin` is added as part of `DefaultPlugins`):
+
+```rust
+App::new()
+  .add_plugins(Jpeg2KPathLodPlugin::default())
+  .add_plugins(DefaultPlugins)
+  .add_plugins(Jpeg2KPlugin)
+  // ...
+  .run();
+```
+
 # Example
 
 ```rust

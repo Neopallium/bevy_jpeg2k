@@ -32,7 +32,7 @@
 
 use bevy::{
   app::{App, Plugin},
-  asset::{io::Reader, AssetLoader, LoadContext},
+  asset::{io::Reader, AssetLoader, LoadContext, RenderAssetUsages},
   prelude::*,
 };
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
@@ -101,7 +101,7 @@ pub fn image_to_texture(img: Image) -> error::Result<bevy::image::Image> {
     TextureDimension::D2,
     data,
     format,
-    bevy::render::render_asset::RenderAssetUsages::all(),
+    RenderAssetUsages::all(),
   ))
 }
 

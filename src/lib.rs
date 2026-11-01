@@ -30,6 +30,8 @@
 //!
 //! ```
 
+use std::path::{Component, Path};
+
 use bevy::{
   app::{App, Plugin},
   asset::{io::Reader, AssetLoader, LoadContext, RenderAssetUsages},
@@ -38,7 +40,28 @@ use bevy::{
 use bevy_reflect::TypePath;
 use wgpu_types::{Extent3d, TextureDimension, TextureFormat};
 
-use jpeg2k::{error, Image, ImageData, ImagePixelData};
+use jpeg2k::{error, DecodeParameters, Image, ImageData, ImagePixelData};
+
+fn get_top_folder(path: &Path) -> Option<&str> {
+  path.components().next().and_then(|top| {
+    if let Component::Normal(top) = top {
+      top.to_str()
+    } else {
+      None
+    }
+  })
+}
+
+fn strip_lod(path: &Path) -> (&Path, Option<u32>) {
+  if let Some(top) = get_top_folder(path) {
+    if top.starts_with("LOD_") {
+      let lod = top[4..].parse().ok();
+      // Need to remove LOD path.
+      return (path.strip_prefix(top).unwrap(), lod);
+    }
+  }
+  (path, None)
+}
 
 /// Jpeg 2000 asset loader for Bevy.
 #[derive(Default, TypePath)]
@@ -53,11 +76,19 @@ impl AssetLoader for Jpeg2KAssetLoader {
     &self,
     reader: &mut dyn Reader,
     _settings: &Self::Settings,
-    _load_context: &mut LoadContext<'_>,
+    load_context: &mut LoadContext<'_>,
   ) -> Result<Self::Asset, Self::Error> {
+    let mut params = DecodeParameters::new();
+    match strip_lod(load_context.path().path()) {
+      (_path, Some(lod)) => {
+        //eprintln!("-- Jpeg2k: path={:?}, reduc={:?}", _path, lod);
+        params = params.reduce(lod);
+      }
+      _ => (),
+    }
     let mut bytes = Vec::new();
     reader.read_to_end(&mut bytes).await?;
-    let image = Image::from_bytes(&bytes)?;
+    let image = Image::from_bytes_with(&bytes, params)?;
     let txt = image_to_texture(image)?;
     Ok(txt)
   }

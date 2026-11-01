@@ -25,7 +25,7 @@ threads = [ "jpeg2k/threads" ]
 [dependencies]
 anyhow = "1.0"
 
-jpeg2k = { version = "0.9", default-features = false }
+jpeg2k = { version = "0.10.1", default-features = false }
 
 bevy = { version = "0.16", default-features = false, features = [ "bevy_asset", "bevy_render" ] }
 wgpu = "24.0"

@@ -21,6 +21,34 @@ JPEG 2000 image loader for [Bevy](https://bevyengine.org/).
 - Bevy 0.6: `bevy_jpeg2k = "0.6"`
 - Bevy 0.5: `bevy_jpeg2k = "0.5"`
 
+# Level of Detail (LOD)
+
+JPEG 2000 supports decoding a single source image at reduced resolutions, which
+can be used to save memory and load time when a lower-resolution version of an
+image is sufficient.
+
+LOD support is opt-in and requires the `path_lod` feature:
+
+```toml
+bevy_jpeg2k = { version = "0.20", features = [ "path_lod" ] }
+```
+
+To request a reduced-resolution decode, prefix the asset path with `LOD_<n>/`,
+where `n` is the reduction level.  Each increment of `n` halves the decoded
+image dimensions (a reduction of `n` decodes at `1 / 2^n` resolution).  The
+source file itself lives at the path *without* the `LOD_<n>/` prefix.
+
+```rust
+// Load `textures/example.j2k` at full resolution.
+let full = asset_server.load("textures/example.j2k");
+
+// Load `textures/example.j2k` at quarter (1/2^2) resolution.
+let quarter = asset_server.load("LOD_2/textures/example.j2k");
+```
+
+Each distinct `LOD_<n>/...` path produces its own `Handle<Image>`, so a single
+source file can be loaded at several resolutions simultaneously.
+
 # Example
 
 ```rust

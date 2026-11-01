@@ -21,6 +21,9 @@ default = [ "openjpeg-sys", "threads" ]
 openjpeg-sys = [ "jpeg2k/openjpeg-sys" ]
 openjp2 = [ "jpeg2k/openjp2" ]
 threads = [ "jpeg2k/threads" ]
+# Decode JPEG 2000 images at reduced resolutions using a `LOD_<n>/` asset path
+# prefix (e.g. `LOD_2/textures/foo.j2k` decodes `textures/foo.j2k` at 1/2^2).
+path_lod = []
 
 [dependencies]
 anyhow = "1.0"
@@ -33,3 +36,7 @@ wgpu-types = "30.0"
 
 [dev-dependencies]
 bevy = "0.20"
+
+[[example]]
+name = "path_lod"
+required-features = [ "path_lod" ]

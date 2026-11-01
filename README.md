@@ -4,7 +4,7 @@ JPEG 2000 image loader for [Bevy](https://bevyengine.org/).
 
 # Versions
 
-- Bevy 0.20: `bevy_jpeg2k = "0.20"`
+- Bevy 0.20: `bevy_jpeg2k = "0.20.1"`
 - Bevy 0.19: `bevy_jpeg2k = "0.19"`
 - Bevy 0.18: `bevy_jpeg2k = "0.18"`
 - Bevy 0.17: `bevy_jpeg2k = "0.17"`
@@ -30,7 +30,7 @@ image is sufficient.
 LOD support is opt-in and requires the `path_lod` feature:
 
 ```toml
-bevy_jpeg2k = { version = "0.20", features = [ "path_lod" ] }
+bevy_jpeg2k = { version = "0.20.1", features = [ "path_lod" ] }
 ```
 
 To request a reduced-resolution decode, prefix the asset path with `LOD_<n>/`,

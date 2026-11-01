@@ -35,12 +35,13 @@ use bevy::{
   asset::{io::Reader, AssetLoader, LoadContext, RenderAssetUsages},
   prelude::*,
 };
+use bevy_reflect::TypePath;
 use wgpu::{Extent3d, TextureDimension, TextureFormat};
 
 use jpeg2k::{error, Image, ImageData, ImagePixelData};
 
 /// Jpeg 2000 asset loader for Bevy.
-#[derive(Default)]
+#[derive(Default, TypePath)]
 pub struct Jpeg2KAssetLoader;
 
 impl AssetLoader for Jpeg2KAssetLoader {
